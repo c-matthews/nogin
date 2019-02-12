@@ -45,9 +45,9 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using MALA integrator"
-    print " : Roberts and Rosenthal, RSS-B (1998)"
-    print " : see https://www.jstor.org/stable/pdf/2985986.pdf"
+    print("Using MALA integrator")
+    print(" : Roberts and Rosenthal, RSS-B (1998)")
+    print(" : see https://www.jstor.org/stable/pdf/2985986.pdf")
   
     
     ceng = IG.m.llh

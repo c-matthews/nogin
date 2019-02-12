@@ -21,9 +21,9 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using mSGLD integrator"
-    print " : Vollmer, Zygalakis and Teh, JMLR (2016)"
-    print " : see https://arxiv.org/abs/1501.00438"
+    print("Using mSGLD integrator")
+    print(" : Vollmer, Zygalakis and Teh, JMLR (2016)")
+    print(" : see https://arxiv.org/abs/1501.00438")
  
 
     IG.extra = []

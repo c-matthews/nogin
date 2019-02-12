@@ -20,7 +20,7 @@ class Output:
         self.tfreq = args.tfreq
         if (self.pfreq==0):
             self.pfreq = 10
-        self.pfreq = (self.N / self.pfreq)
+        self.pfreq = (self.N // self.pfreq)
         self.burn_pc = args.burn_pc
         
         self.savetrajectory = args.savetrajectory
@@ -41,7 +41,7 @@ class Output:
         self.stepcount = 0
         self.ocount = 0
     
-        self.TotalSaves = 1 + self.N / self.ofreq
+        self.TotalSaves = 1 + self.N // self.ofreq
 
 
         self.X = np.zeros( (self.model.ndof, self.TotalSaves) )
@@ -55,7 +55,7 @@ class Output:
     
         ctime = datetime.datetime.fromtimestamp(time()).strftime('%Y-%m-%d %H:%M:%S')
         timetaken = time()-self.starttime
-        print "Time elapsed: " + str(timetaken) + "."
+        print("Time elapsed: " + str(timetaken) + ".")
         
         self.X = self.X[:,:self.ocount]
         self.E = self.E[:,:self.ocount]
@@ -94,7 +94,7 @@ class Output:
             
         if (self.acf>0):
             acf = np.zeros( (self.Xb.shape[0], self.acf ))
-            print "Computing autocorrelation functions..."
+            print("Computing autocorrelation functions...")
             tm = time()
             st = time()
             for ii in xrange( self.Xb.shape[0] ):
@@ -106,7 +106,7 @@ class Output:
                     jjj=jj+1
                     acf[ii,jjj] = np.mean( xx[jjj:] * xx[:-jjj])/xx2
                 if (time()-tm>10):
-                    print "   >> On " + str(ii) + " of " + str(self.Xb.shape[0]) +  ". Time: " + str(time()-st)
+                    print ("   >> On " + str(ii) + " of " + str(self.Xb.shape[0]) +  ". Time: " + str(time()-st))
                     tm = time()
             savedata['acf'] = acf
 
@@ -114,9 +114,9 @@ class Output:
         
         
 
-        print "Saving output to " + self.o
+        print("Saving output to " + self.o)
         sio.savemat( self.o , savedata )
-        print "Saved OK"
+        print("Saved OK")
 
     def Log(self):
 
@@ -137,9 +137,9 @@ class Output:
             else:
                 accstr = ''
             
-            print " Step " + str(self.stepcount) + " of " + str(self.N) + " (" + str(int( (1000.0*self.stepcount)/self.N)/10.0) \
+            print(" Step " + str(self.stepcount) + " of " + str(self.N) + " (" + str(int( (1000.0*self.stepcount)/self.N)/10.0) \
                 + "%)  ::  Elapsed=" + str(timedelta(seconds=int(dt))) + " Remaining=" + str(timedelta(seconds=int(rt)))\
-                + "  ::   llh = " + str(self.model.llh ) + accstr
+                + "  ::   llh = " + str(self.model.llh ) + accstr)
 
 
 
@@ -149,7 +149,7 @@ class Output:
 
     def RollingAverages(self):
     
-        print "Computing rolling averages..."
+        print("Computing rolling averages...")
         tm = time()
         st = time()
 
@@ -177,7 +177,7 @@ class Output:
             Rmean2[:,ii] = np.nanmean( (rvmean)**2, axis=0 )
             Rvar2[:,ii] = np.nanmean( (rvvar)**2, axis=0 )
             if (time()-tm>10):
-                print "   >> On " + str(ii) + " of " + str(ranum) +  ". Time: " + str(time()-st)
+                print("   >> On " + str(ii) + " of " + str(ranum) +  ". Time: " + str(time()-st))
                 tm = time()
 
 

@@ -40,5 +40,5 @@ def Setup( Model ):
     # Add the constants
     Model.X = np.insert( Model.X , 0 , 1.0 , axis=0 )
 
-    print "Bayesian Linear Regression model with Gaussian prior"
+    print ("Bayesian Linear Regression model with Gaussian prior")
 

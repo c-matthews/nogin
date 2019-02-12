@@ -20,9 +20,9 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using SGLD integrator"
-    print " : Welling and Teh, ICML (2011)"
-    print " : see http://people.ee.duke.edu/~lcarin/398_icmlpaper.pdf"
+    print ("Using SGLD integrator")
+    print (" : Welling and Teh, ICML (2011)")
+    print (" : see http://people.ee.duke.edu/~lcarin/398_icmlpaper.pdf")
  
 
     IG.extra = []

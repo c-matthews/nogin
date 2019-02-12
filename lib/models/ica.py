@@ -44,5 +44,5 @@ def Setup( Model ):
 
     Model.alpha = 1.0
 
-    print "Independent Component Analysis model with Gaussian prior"
+    print ("Independent Component Analysis model with Gaussian prior")
 

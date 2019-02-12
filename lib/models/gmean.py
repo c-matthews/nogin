@@ -20,5 +20,5 @@ def Setup( Model ):
     Model.DataSize = Model.X.shape[1]
     
 
-    print "Simple Gaussian model with Gaussian distributed means"
+    print ("Simple Gaussian model with Gaussian distributed means")
 

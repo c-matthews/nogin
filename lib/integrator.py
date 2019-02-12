@@ -28,43 +28,41 @@ class Integrator:
         if (self.itype is None):
             raise Exception('No integrator specified')
         
-            
-        
         if (self.itype.lower()=='baoab'):
             known = True
-            from integrators.baoab import Step, Setup, ResetFriction
+            from lib.integrators.baoab import Step, Setup, ResetFriction
             self.RFriction = ResetFriction
             self.autofriction = args.autofriction
             
         if (self.itype.lower()=='msgld'):
             known = True
-            from integrators.msgld import Step, Setup
+            from lib.integrators.msgld import Step, Setup
             
         if (self.itype.lower()=='ccadl'):
             known = True
-            from integrators.ccadl import Step, Setup, ResetFriction
+            from lib.integrators.ccadl import Step, Setup, ResetFriction
             self.RFriction = ResetFriction
             self.autofriction = args.autofriction
             
         if (self.itype.lower()=='sgnht'):
             known = True
-            from integrators.sgnht import Step, Setup
+            from lib.integrators.sgnht import Step, Setup
             
         if (self.itype.lower()=='sgld'):
             known = True
-            from integrators.sgld import Step, Setup
+            from lib.integrators.sgld import Step, Setup
             
         if (self.itype.lower()=='mala'):
             known = True
-            from integrators.mala import Step, Setup
+            from lib.integrators.mala import Step, Setup
             
         if (self.itype.lower()=='sghmc'):
             known = True
-            from integrators.sghmc import Step, Setup
+            from lib.integrators.sghmc import Step, Setup
             
         if (self.itype.lower()=='nogin'):
             known = True
-            from integrators.nogin import Step, Setup, ResetFriction
+            from lib.integrators.nogin import Step, Setup, ResetFriction
             self.RFriction = ResetFriction
             self.autofriction = args.autofriction
 
@@ -126,7 +124,7 @@ class Integrator:
         try:
             eigw,eigv = np.linalg.eig( covX )
         except:
-            print "  >> Auto Friction Failed!"
+            print("  >> Auto Friction Failed!")
             return
         
         ff = 1.0 / np.sqrt( np.max( eigv.real ) )
@@ -140,7 +138,7 @@ class Integrator:
         self.oldg = self.g
         self.g = ff
         
-        print "  >> Auto Friction success, new friction = " + str(ff)
+        print("  >> Auto Friction success, new friction = " + str(ff))
         
         self.RFriction(self)
         return
@@ -150,7 +148,7 @@ class Integrator:
 
 
 def IgnoreFriction( X ):
-    print "  >> Friction ignored for this integrator"
+    print("  >> Friction ignored for this integrator")
     pass
 
 

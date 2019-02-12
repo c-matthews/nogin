@@ -40,9 +40,9 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using NOGIN integrator"
-    print " : Matthews and Weare (2018)"
-    print " : see https://arxiv.org/abs/1805.08863"
+    print("Using NOGIN integrator")
+    print(" : Matthews and Weare (2018)")
+    print(" : see https://arxiv.org/abs/1805.08863")
 
     IG.extra = [np.copy(IG.m.F)]
     cc = np.exp(- IG.g * IG.dt )
@@ -54,15 +54,15 @@ def Setup( IG ):
     
     if (IG.m.covhist_do):
         IG.NOGINsolve = covhistsolve
-        print " : (using Woodbury identity)"
+        print(" : (using Woodbury identity)")
     else:
         if (IG.noginexact):
             IG.NOGINsolve = ExactSolve
-            print " : (using exact solve)"
+            print(" : (using exact solve)")
         else:
             if (IG.nogincg):
                 IG.NOGINsolve = CGSolve
-                print " : (using conjugate gradient)"
+                print(" : (using conjugate gradient)")
 
 
 def CGSolve(c1,dt24,c,p):
@@ -107,7 +107,7 @@ def ResetFriction( IG ):
             IG.m.CC = np.dot( IG.m.CC.T , IG.m.CC ) / (IG.m.CC.shape[0]-1.0)
         evals,evecs = np.linalg.eig( IG.m.CC )
     except:
-        print "  >> Failed to optimize friction!"
+        print("  >> Failed to optimize friction!")
         return
     
     topev = np.min( evals.real )
@@ -121,7 +121,7 @@ def ResetFriction( IG ):
     
     IG.c3 = np.sqrt( IG.c1 )
 
-    print "  >> Effective friction: " + str( -np.log( (1-IG.c1)/(1.0+IG.c1))/IG.dt  )
+    print( "  >> Effective friction: " + str( -np.log( (1-IG.c1)/(1.0+IG.c1))/IG.dt  ))
 
     return
 

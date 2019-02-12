@@ -34,11 +34,11 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using BAOAB integrator"
-    print " : Leimkuhler and Matthews, AMRX (2013)"
-    print " : see https://arxiv.org/abs/1203.5428"
+    print("Using BAOAB integrator")
+    print(" : Leimkuhler and Matthews, AMRX (2013)")
+    print(" : see https://arxiv.org/abs/1203.5428")
     if IG.nonoise:
-        print " : (Running as optimizer)"
+        print(" : (Running as optimizer)")
 
 
     IG.extra = [np.copy(IG.m.F)]

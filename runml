@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys 
 import time 
@@ -13,10 +13,10 @@ from lib.output import Output
 
 def main ( args ):
 
-    print "----"
-    print "RunML noisy gradient test script"
-    print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-    print "----"
+    print("----")
+    print("RunML noisy gradient test script")
+    print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+    print("----")
 
 
     rng = random.RandomState( args.s )
@@ -30,14 +30,14 @@ def main ( args ):
     myIntegrator.Setup(syst)
     myOutput.Setup(syst)
 
-    print "Beginning run:"
+    print("Beginning run:")
 
-    for ii in xrange( args.n ):
+    for ii in range( args.n ):
         myIntegrator.Step(ii)
         myOutput.Log()
 
         if (not np.isfinite(myModel.llh)):
-            print "  >> Error in simulation at step " + str(ii)
+            print("  >> Error in simulation at step " + str(ii))
             break
 
     myOutput.Save()
@@ -47,7 +47,7 @@ def main ( args ):
 if __name__=="__main__":
 
     parser = argparse.ArgumentParser(description='Noisy Gradient Integrator example script')
-    parser.add_argument('-i',type=str, default='nogin', help='Integrator (nogin/ccadl)')
+    parser.add_argument('-i',type=str, help='Integrator (nogin/ccadl)')
     parser.add_argument('-m',type=str, help='Model')
     parser.add_argument('-d',type=str, help='Dataset')
     parser.add_argument('-dt',type=float, help='Timestep')
@@ -73,8 +73,7 @@ if __name__=="__main__":
     parser.add_argument('-nogincg',action='store_true', help='Use the conjugate gradient solve in NOGIN instead of an approximation')
     parser.add_argument('-autofriction',action='store_true', help='Automatically pick a good friction after 5%% of simulation')
     parser.add_argument('-adaptsghmc',action='store_true', help='Increase the friction by 50%% in SGHMC if set too small')
-    parser.add_argument('-nonoise',action='store_true', help='Removes the noise term in the BAOAB integrator')
-    parser.add_argument('-torchload',action='store_true', help='Loads the mnist data using torchvision')
+    parser.add_argument('-nonoise',action='store_true', help='Removes the noise term in the BAOAB integrator') 
     parser.add_argument('-covhist',type=int, default=0, help='Build the covariance from the previous [covhist] samples')
 
     args = parser.parse_args()

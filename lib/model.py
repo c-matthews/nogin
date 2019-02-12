@@ -22,7 +22,6 @@ class Model:
         self.UseVariance = args.diagonalcovariance
         self.CC = None
         self.CLambda = args.clambda
-        self.torchload = args.torchload
         
         if (args.covhist>0):
             self.covhist_len = args.covhist
@@ -34,19 +33,15 @@ class Model:
         
         if (self.model.lower()=='gmean'):
             known = True
-            from models.gmean import LLH, Setup
+            from lib.models.gmean import LLH, Setup
         
         if (self.model.lower()=='blr'):
             known = True
-            from models.blr import LLH, Setup
+            from lib.models.blr import LLH, Setup
         
         if (self.model.lower()=='ica'):
             known = True
-            from models.ica import LLH, Setup
-        
-        if (self.model.lower()=='nn'):
-            known = True
-            from models.nn import LLH, Setup
+            from lib.models.ica import LLH, Setup
 
         if (not known):
             raise Exception('Unknown model specified: ' + self.model.lower())
@@ -63,22 +58,13 @@ class Model:
         self.ig = ig
         self.output = output
 
-        print "Loading dataset..."
-        if (not self.torchload):
-            if (not os.path.isfile(self.dataset) ):
-                raise Exception('Unable to find data: ' + self.dataset)
-            self.data = sio.loadmat( self.dataset )
-            self.q = np.array(self.data['ic']).astype('float64')
-        else:
-            import torchvision
-            import torch
-            self.data = torchvision.datasets.MNIST(root=self.dataset, train=True,
-                    download=True, transform=torchvision.transforms.ToTensor())
-            self.DataSize = 1000
-            mysampler = torch.utils.data.SubsetRandomSampler(xrange(self.DataSize))
-            self.q = np.loadtxt(self.dataset + '/ic.txt')[:,np.newaxis]
+        print("Loading dataset...")
+        if (not os.path.isfile(self.dataset) ):
+            raise Exception('Unable to find data: ' + self.dataset)
+        self.data = sio.loadmat( self.dataset )
+        self.q = np.array(self.data['ic']).astype('float64')
         
-        print "Data loaded OK"
+        print("Data loaded OK")
 
         self.p = self.rng.randn( self.q.shape[0], self.q.shape[1] )
         self.llh = 0
@@ -101,11 +87,8 @@ class Model:
         if (self.k>self.DataSize):
             self.k = self.DataSize
         
-        print "Batchsize: " + str(self.k) + " of " + str(self.DataSize) + ";   System size: " + str(self.q.shape)
-        
-        if (self.torchload):
-            self.traindata = torch.utils.data.DataLoader(self.data, batch_size=self.k,
-                                          shuffle=False,sampler=mysampler)
+        print("Batchsize: " + str(self.k) + " of " + str(self.DataSize) + ";   System size: " + str(self.q.shape))
+
         
         self.InitForce(self.q )
         
@@ -113,7 +96,7 @@ class Model:
 
     def GetForce(self, q, getcovariance=True ):
 
-        idxs = self.rng.choice( xrange( self.DataSize) , self.k, replace=False )
+        idxs = self.rng.choice( range( self.DataSize) , self.k, replace=False )
         kfac = self.DataSize / (1.0 * self.k)
         kfacllh = kfac
 
@@ -156,7 +139,7 @@ class Model:
 
     def InitForce(self, q ):
     
-        llh, fall, plh, pf  = self.MLLH( self, q , xrange(self.DataSize) )
+        llh, fall, plh, pf  = self.MLLH( self, q , range(self.DataSize) )
 
         kfac = 1.0
  

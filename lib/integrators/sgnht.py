@@ -40,9 +40,9 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using SGNHT-S integrator"
-    print " : Leimkuhler and Shang, SIAM J. Sci. Comput. (2016)"
-    print " : see https://arxiv.org/abs/1505.06889"
+    print ("Using SGNHT-S integrator")
+    print (" : Leimkuhler and Shang, SIAM J. Sci. Comput. (2016)")
+    print (" : see https://arxiv.org/abs/1505.06889")
  
     x = 0
     IG.extra = [x ]

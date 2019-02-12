@@ -32,9 +32,9 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using CC-ADL integrator"
-    print " : Shang, Zhu, Leimkuhler and Storkey, NIPS (2015)"
-    print " : see https://arxiv.org/abs/1510.08692"
+    print("Using CC-ADL integrator")
+    print(" : Shang, Zhu, Leimkuhler and Storkey, NIPS (2015)")
+    print(" : see https://arxiv.org/abs/1510.08692")
  
     x = 0
     IG.extra = [x ]

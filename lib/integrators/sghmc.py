@@ -29,7 +29,7 @@ def Step(IG, q,p,extra):
                 IG.g *= 1.5
                 IG.Cmatrix  = IG.g*np.eye(IG.m.q.size)
                 IG.c1 = IG.dt * IG.g
-                print "  >> AdaptSGHMC: Increasing friction to " + str(IG.g)
+                print ("  >> AdaptSGHMC: Increasing friction to " + str(IG.g))
 
         if (not success):
             raise Exception('Could not increase friction enough')
@@ -50,9 +50,9 @@ def Step(IG, q,p,extra):
 
 def Setup( IG ):
 
-    print "Using SGHMC integrator"
-    print " : Chen, Fox and Guestrin, ICML (2014)"
-    print " : see https://arxiv.org/abs/1402.4102"
+    print ("Using SGHMC integrator")
+    print (" : Chen, Fox and Guestrin, ICML (2014)")
+    print (" : see https://arxiv.org/abs/1402.4102")
  
 
     IG.extra = []
