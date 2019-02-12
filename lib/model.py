@@ -24,9 +24,9 @@ class Model:
         self.CLambda = args.clambda
         
         if (args.covhist>0):
-            self.covhist_len = args.covhist
-            self.covhist_ii  = 0
             self.covhist_do  = True
+            self.Clist_len = args.covhist
+            self.CList = []
         else:
             self.covhist_do  = False
         
@@ -72,27 +72,22 @@ class Model:
         
         self.ndof = self.q.size
         
-        if (self.covhist_do):
-            self.covhist = np.zeros( ( self.covhist_len , self.q.shape[0]  ))
         
         self.MSetup(self)
         
-        self.k = 0
+        self.k = self.DataSize
         if (self.bsize_int>0):
             self.k = self.bsize_int
         if (self.bsize_pc>0):
-            self.k = int(self.bsize_pc * self.DataSize)
+            self.k = np.round(self.bsize_pc * self.DataSize)
         if (self.k<1):
             self.k = 1
-        if (self.k>self.DataSize):
-            self.k = self.DataSize
         
         print("Batchsize: " + str(self.k) + " of " + str(self.DataSize) + ";   System size: " + str(self.q.shape))
 
         
         self.InitForce(self.q )
-        
-
+         
 
     def GetForce(self, q, getcovariance=True ):
 
@@ -131,7 +126,7 @@ class Model:
             
             C = C * ( (self.DataSize - self.k ) * kfac  )
             
-            self.CC = self.Cfac * C + (1-self.Cfac)*self.CC
+            self.CC = self.AppendClist(C) #self.Cfac * C + (1-self.Cfac)*self.CC
 
         return V , F, self.CC
 
@@ -158,15 +153,35 @@ class Model:
         
         self.CC =  C
         
-
+        if (self.covhist_do):
+            self.CList = [np.copy(C)] * self.Clist_len
+    
         return
+        
+    def AppendClist( C ):
+        if (not self.covhist_do):
+            return C
+    
+        self.CList = [np.copy(C)] + self.Clist[:-1]
+
+        lam = 1.0
+        sumlam = 0.0
+        tC = 0
+        for ii in range(len(self.CList)):
+            tC += lam  * self.Clist[ii]
+            sumlam += lam
+            lam = lam * self.Cfac
+            
+        return tC / sumlam
+
 
     def CovVec(self, C , v ):
 
-        if (self.covhist_do):
-            #cc = self.covhist - np.mean(self.covhist,axis=0)
-            cc = C - np.mean(C,axis=0)
-            res = np.dot( cc.T, np.dot(cc,v)) / (self.covhist_len - 1)
-            return res
-        else:
-            return np.dot( C , v )
+        return np.dot( C , v )
+#        if (self.covhist_do):
+#            #cc = self.covhist - np.mean(self.covhist,axis=0)
+#            cc = C - np.mean(C,axis=0)
+#            res = np.dot( cc.T, np.dot(cc,v)) / (self.covhist_len - 1)
+#            return res
+#        else:
+#            return np.dot( C , v )

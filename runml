@@ -18,7 +18,6 @@ def main ( args ):
     print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
     print("----")
 
-
     rng = random.RandomState( args.s )
 
     myIntegrator = Integrator( args )
@@ -47,7 +46,7 @@ def main ( args ):
 if __name__=="__main__":
 
     parser = argparse.ArgumentParser(description='Noisy Gradient Integrator example script')
-    parser.add_argument('-i',type=str, help='Integrator (nogin/ccadl)')
+    parser.add_argument('-i',type=str, help='Integrator (nogin/ccadl/...)')
     parser.add_argument('-m',type=str, help='Model')
     parser.add_argument('-d',type=str, help='Dataset')
     parser.add_argument('-dt',type=float, help='Timestep')
