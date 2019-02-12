@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+
+import sys 
+import time 
+import argparse
+import datetime
+from numpy import random
+import numpy as np
+
+from lib.integrator import Integrator
+from lib.model import Model
+from lib.output import Output
+
+def main ( args ):
+
+    print "----"
+    print "RunML noisy gradient test script"
+    print datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+    print "----"
+
+
+    rng = random.RandomState( args.s )
+
+    myIntegrator = Integrator( args )
+    myModel = Model( args )
+    myOutput = Output( args )
+
+    syst = [rng,myIntegrator,myModel,myOutput]
+    myModel.Setup(syst)
+    myIntegrator.Setup(syst)
+    myOutput.Setup(syst)
+
+    print "Beginning run:"
+
+    for ii in xrange( args.n ):
+        myIntegrator.Step(ii)
+        myOutput.Log()
+
+        if (not np.isfinite(myModel.llh)):
+            print "  >> Error in simulation at step " + str(ii)
+            break
+
+    myOutput.Save()
+
+
+
+if __name__=="__main__":
+
+    parser = argparse.ArgumentParser(description='Noisy Gradient Integrator example script')
+    parser.add_argument('-i',type=str, default='nogin', help='Integrator (nogin/ccadl)')
+    parser.add_argument('-m',type=str, help='Model')
+    parser.add_argument('-d',type=str, help='Dataset')
+    parser.add_argument('-dt',type=float, help='Timestep')
+    parser.add_argument('-g',type=float, default=1.0, help='Friction constant')
+    parser.add_argument('-n',type=int, default=1000, help='Number of steps')
+    parser.add_argument('-clambda',type=float, default=1, help='Averaging constant for past covariances')
+    parser.add_argument('-bsize',type=int, default=0, help='The batch size to use')
+    parser.add_argument('-bsize_pc',type=float, default=0.0, help='The batch size as a percent of total')
+    parser.add_argument('-burn_pc',type=float, default=0.1, help='The amount to burn for analysis, as a percent of total')
+    parser.add_argument('-s',type=int, help='RNG seed')
+    parser.add_argument('-ofreq',type=int, default=1, help='Step save frequency')
+    parser.add_argument('-pfreq',type=int, default=10, help='Number of screen updates to receive')
+    parser.add_argument('-tfreq',type=int, default=30, help='Time between screen updates in seconds')
+    parser.add_argument('-o',type=str, help='Output location')
+    parser.add_argument('-rollingaverages',type=int, default=0, help='How many rolling averages to compute')
+    parser.add_argument('-histogrambins',type=int, default=0, help='How many histogram bins to use')
+    parser.add_argument('-autocorrelationfn',type=int, default=0, help='The length of the autocorrelation function to output')
+
+    parser.add_argument('-exactcovariance',action='store_true', help='Use the exact covariance information')
+    parser.add_argument('-diagonalcovariance',action='store_true', help='Use the variance instead of covariance')
+    parser.add_argument('-savetrajectory',action='store_true', help='Save the entire trajectory to the output file')
+    parser.add_argument('-noginexact',action='store_true', help='Use the exact solve in NOGIN instead of an approximation')
+    parser.add_argument('-nogincg',action='store_true', help='Use the conjugate gradient solve in NOGIN instead of an approximation')
+    parser.add_argument('-autofriction',action='store_true', help='Automatically pick a good friction after 5%% of simulation')
+    parser.add_argument('-adaptsghmc',action='store_true', help='Increase the friction by 50%% in SGHMC if set too small')
+    parser.add_argument('-nonoise',action='store_true', help='Removes the noise term in the BAOAB integrator')
+    parser.add_argument('-torchload',action='store_true', help='Loads the mnist data using torchvision')
+    parser.add_argument('-covhist',type=int, default=0, help='Build the covariance from the previous [covhist] samples')
+
+    args = parser.parse_args()
+
+    main(args)
+
+
+
+
+
+
+
