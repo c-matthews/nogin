@@ -51,7 +51,7 @@ if __name__=="__main__":
     parser.add_argument('-d',type=str, help='Dataset')
     parser.add_argument('-dt',type=float, help='Timestep')
     parser.add_argument('-g',type=float, default=1.0, help='Friction constant')
-    parser.add_argument('-n',type=int, default=1000, help='Number of steps')
+    parser.add_argument('-n',type=int, default=0, help='Number of steps') 
     parser.add_argument('-clambda',type=float, default=1, help='Averaging constant for past covariances')
     parser.add_argument('-bsize',type=int, default=0, help='The batch size to use')
     parser.add_argument('-bsize_pc',type=float, default=0.0, help='The batch size as a percent of total')
@@ -74,6 +74,7 @@ if __name__=="__main__":
     parser.add_argument('-adaptsghmc',action='store_true', help='Increase the friction by 50%% in SGHMC if set too small')
     parser.add_argument('-nonoise',action='store_true', help='Removes the noise term in the BAOAB integrator') 
     parser.add_argument('-covhist',type=int, default=0, help='Build the covariance from the previous [covhist] samples')
+    parser.add_argument('-skipenergy',action='store_true', help='Do not save the energy output of the system')
 
     args = parser.parse_args()
 

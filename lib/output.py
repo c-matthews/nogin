@@ -11,7 +11,7 @@ class Output:
 
         if (args.o is None):
             raise Exception('No output location specified')
-
+        
         self.o = args.o
         self.N = args.n
         
@@ -24,6 +24,7 @@ class Output:
         self.burn_pc = args.burn_pc
         
         self.savetrajectory = args.savetrajectory
+        self.skipenergy = args.skipenergy
         self.hbins = args.histogrambins
         self.ranum = args.rollingaverages
         self.acf = args.autocorrelationfn
@@ -45,7 +46,10 @@ class Output:
 
 
         self.X = np.zeros( (self.model.ndof, self.TotalSaves) )
-        self.E = np.zeros( (2 , self.TotalSaves) )
+        if (self.skipenergy):
+            self.E = 0
+        else:
+            self.E = np.zeros( (2 , self.TotalSaves) )
  
         self.lastupd = time()
         self.starttime = time()
@@ -58,7 +62,8 @@ class Output:
         print("Time elapsed: " + str(timetaken) + ".")
         
         self.X = self.X[:,:self.ocount]
-        self.E = self.E[:,:self.ocount]
+        if (not self.skipenergy):
+            self.E = self.E[:,:self.ocount]
         
         savedata = {'E':self.E,'N':self.N,'T':timetaken,'date':ctime,'dt':self.ig.dt,'g':self.ig.g,\
             'ig':self.ig.itype,'model':self.model.model,'k':self.model.k,'dataset':self.model.dataset,\
@@ -124,8 +129,9 @@ class Output:
 
         if ((self.stepcount % self.ofreq)==0 ):
             self.X[ :, self.ocount ] = np.squeeze(np.copy( self.model.q ))
-            self.E[ 0, self.ocount ] = self.model.llh
-            self.E[ 1, self.ocount ] = np.sum(self.model.p**2)*0.5
+            if (not self.skipenergy):
+                self.E[ 0, self.ocount ] = self.model.llh
+                self.E[ 1, self.ocount ] = np.sum(self.model.p**2)*0.5
             self.ocount += 1
 
         if ((self.stepcount % self.pfreq)==0 ) or ((time() - self.lastupd)>self.tfreq):

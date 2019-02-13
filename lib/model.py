@@ -79,7 +79,7 @@ class Model:
         if (self.bsize_int>0):
             self.k = self.bsize_int
         if (self.bsize_pc>0):
-            self.k = np.round(self.bsize_pc * self.DataSize)
+            self.k = int( np.round(self.bsize_pc * self.DataSize) )
         if (self.k<1):
             self.k = 1
         
