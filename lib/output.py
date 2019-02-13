@@ -85,7 +85,7 @@ class Output:
         if (self.hbins>0):
             Hy = np.zeros( (self.Xb.shape[0], self.hbins ))
             Hx = np.zeros( (self.Xb.shape[0], self.hbins+1 ))
-            for ii in xrange( self.Xb.shape[0] ):
+            for ii in range( self.Xb.shape[0] ):
                 aa,bb = np.histogram( self.Xb[ii,:], bins=self.hbins, density=True)
                 Hy[ii,:] = np.copy(aa)
                 Hx[ii,:] = np.copy(bb)
@@ -97,7 +97,7 @@ class Output:
             print("Computing autocorrelation functions...")
             tm = time()
             st = time()
-            for ii in xrange( self.Xb.shape[0] ):
+            for ii in range( self.Xb.shape[0] ):
                 xx=(self.Xb[ii,:])
                 xx=xx-np.mean(xx)
                 xx2 = np.mean(xx**2)

@@ -51,18 +51,14 @@ def Setup( IG ):
     IG.dt24 = 0.25* IG.dt**2
 
     IG.NOGINsolve = ApproxSolve
-    
-    if (IG.m.covhist_do):
-        IG.NOGINsolve = covhistsolve
-        print(" : (using Woodbury identity)")
+     
+    if (IG.noginexact):
+        IG.NOGINsolve = ExactSolve
+        print(" : (using exact solve)")
     else:
-        if (IG.noginexact):
-            IG.NOGINsolve = ExactSolve
-            print(" : (using exact solve)")
-        else:
-            if (IG.nogincg):
-                IG.NOGINsolve = CGSolve
-                print(" : (using conjugate gradient)")
+        if (IG.nogincg):
+            IG.NOGINsolve = CGSolve
+            print(" : (using conjugate gradient)")
 
 
 def CGSolve(c1,dt24,c,p):
@@ -101,14 +97,18 @@ def ResetFriction( IG ):
     IG.c1 = ( 1 - cc ) / (1.0+cc)
     IG.c3 = np.sqrt( IG.c1 )
 
-    try:
-        if (IG.m.covhist_do):
-            IG.m.CC = IG.m.covhist - np.mean( IG.m.covhist,axis=0)
-            IG.m.CC = np.dot( IG.m.CC.T , IG.m.CC ) / (IG.m.CC.shape[0]-1.0)
-        evals,evecs = np.linalg.eig( IG.m.CC )
-    except:
-        print("  >> Failed to optimize friction!")
-        return
+    
+    if (IG.m.CC.size==1):
+        evals = IG.m.CC
+    else:
+        try:
+            #if (IG.m.covhist_do):
+            #    IG.m.CC = IG.m.covhist - np.mean( IG.m.covhist,axis=0)
+            #    IG.m.CC = np.dot( IG.m.CC.T , IG.m.CC ) / (IG.m.CC.shape[0]-1.0)
+            evals,evecs = np.linalg.eig( IG.m.CC )
+        except:
+            print("  >> Failed to optimize friction!")
+            return
     
     topev = np.min( evals.real )
     

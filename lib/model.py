@@ -96,7 +96,7 @@ class Model:
         kfacllh = kfac
 
         if (self.UseExactCov and getcovariance):
-            llh, fall, plh, pf  = self.MLLH( self, q , xrange(self.DataSize) )
+            llh, fall, plh, pf  = self.MLLH( self, q , range(self.DataSize) )
             f = fall[:,idxs]
             kfacllh = 1.0
         else:
@@ -105,11 +105,6 @@ class Model:
  
         F = pf+kfac*np.sum(f,axis=1,keepdims=True)
         V = plh+kfacllh*llh
-        
-        if (getcovariance and self.covhist_do):
-            self.covhist[self.covhist_ii,:] = (F-pf).flatten()
-            self.covhist_ii = (self.covhist_ii +1 ) % self.covhist_len
-            return V, F, self.covhist 
         
         if (getcovariance and (self.k<self.DataSize)):
             
@@ -123,11 +118,13 @@ class Model:
                     np.diag(np.var(f,axis=1,ddof=1))
                 else:
                     C= np.cov( f )
-            
+        
+        
             C = C * ( (self.DataSize - self.k ) * kfac  )
             
             self.CC = self.AppendClist(C) #self.Cfac * C + (1-self.Cfac)*self.CC
 
+            #print(self.CC/( (self.DataSize - self.k ) * kfac  ))
         return V , F, self.CC
 
 
@@ -143,11 +140,6 @@ class Model:
         self.llh = V
         self.F = F
         
-        if (self.covhist_do):
-            for ii in xrange(self.covhist_len):
-                aa,bb,cc = self.GetForce( self.q )
-            return
-        
         C = np.cov( fall )
         C = C * ( (self.DataSize - self.k ) * (self.DataSize / (1.0 * self.k))  )
         
@@ -158,20 +150,20 @@ class Model:
     
         return
         
-    def AppendClist( C ):
+    def AppendClist( self, C ):
         if (not self.covhist_do):
             return C
     
-        self.CList = [np.copy(C)] + self.Clist[:-1]
+        self.CList = [np.copy(C)] + self.CList[:-1]
 
         lam = 1.0
         sumlam = 0.0
         tC = 0
         for ii in range(len(self.CList)):
-            tC += lam  * self.Clist[ii]
+            tC += lam  * self.CList[ii]
             sumlam += lam
             lam = lam * self.Cfac
-            
+        
         return tC / sumlam
 
 

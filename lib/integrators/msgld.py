@@ -13,7 +13,7 @@ def Step(IG, q,p,extra):
     
     # Update position
     q += IG.h * f + dt*R
-    q -= IG.h * dt * IG.m.CovVec(C,R) #np.dot( C , R )
+    q -= (0.25*IG.h * dt) * IG.m.CovVec(C,R) #np.dot( C , R )
     
     return q , p , extra
 

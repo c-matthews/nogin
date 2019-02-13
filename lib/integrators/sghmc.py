@@ -18,7 +18,7 @@ def Step(IG, q,p,extra):
     
     if (IG.adaptsghmc):
         success = False
-        for ii in xrange(100):
+        for ii in range(100):
             CminusB = IG.Cmatrix - dt2 * c
             
             try:

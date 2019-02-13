@@ -121,11 +121,14 @@ class Integrator:
 
         covX = np.cov(X)
         
-        try:
-            eigw,eigv = np.linalg.eig( covX )
-        except:
-            print("  >> Auto Friction Failed!")
-            return
+        if (X.shape[0]>1):
+            try:
+                eigw,eigv = np.linalg.eig( covX )
+            except:
+                print("  >> Auto Friction Failed!")
+                return
+        else:
+            eigv = covX
         
         ff = 1.0 / np.sqrt( np.max( eigv.real ) )
         
