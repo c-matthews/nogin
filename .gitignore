@@ -1,0 +1,6 @@
+*.pyc
+test.mat
+*.ipynb
+*~
+
+lib/__pycache__/

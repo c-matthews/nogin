@@ -170,7 +170,8 @@ class Output:
         Rmean2 = np.zeros((D,ranum))
         Rvar2 = np.zeros((D,ranum))
 
-        t = np.around(np.geomspace( 10 , N , num=ranum )).astype(int)
+        t = np.around(np.logspace( 1 , np.log10(N) , num=ranum )).astype(int)
+        # geomspace
         
         df = pd.DataFrame( X.T  )
         

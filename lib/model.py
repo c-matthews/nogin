@@ -42,6 +42,10 @@ class Model:
         if (self.model.lower()=='ica'):
             known = True
             from lib.models.ica import LLH, Setup
+        
+        if (self.model.lower()=='gmix'):
+            known = True
+            from lib.models.gmix import LLH, Setup
 
         if (not known):
             raise Exception('Unknown model specified: ' + self.model.lower())
